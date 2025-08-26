@@ -1,0 +1,64 @@
+<Window x:Class="PdfStudio.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+        Title="PDF Studio" Height="720" Width="1100"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="False" WindowStyle="SingleBorderWindow"
+        Background="#FF1E1E1E">
+
+  <DockPanel LastChildFill="True">
+
+    <!-- Top toolbar -->
+    <ToolBarTray DockPanel.Dock="Top">
+      <ToolBar>
+        <Button Click="OpenPdf_Click" Padding="12,4" Margin="0,0,6,0">Open PDF…</Button>
+        <Button Click="CreateNewPdf_Click" Padding="12,4" Margin="0,0,6,0">Create New PDF</Button>
+        <Button x:Name="SaveAsButton" Click="SaveAs_Click" IsEnabled="False"
+                Padding="12,4" Margin="0,0,12,0">Save As…</Button>
+
+        <Separator/>
+
+        <Button x:Name="PrevBtn" Click="PrevPage_Click" IsEnabled="False"
+                Padding="10,4" Margin="0,0,6,0">◀ Prev</Button>
+        <TextBlock VerticalAlignment="Center" Margin="0,0,6,0" Text="Page:"/>
+        <TextBox x:Name="PageBox" Width="56" VerticalContentAlignment="Center"
+                 KeyDown="PageBox_KeyDown" IsEnabled="False"/>
+        <TextBlock x:Name="PageCountText" VerticalAlignment="Center" Margin="6,0,12,0" Text="/ 0"/>
+        <Button x:Name="NextBtn" Click="NextPage_Click" IsEnabled="False"
+                Padding="10,4" Margin="0,0,12,0">Next ▶</Button>
+
+        <Separator/>
+
+        <TextBlock VerticalAlignment="Center" Margin="0,0,6,0" Text="Zoom:"/>
+        <ComboBox x:Name="ZoomBox" Width="90" SelectionChanged="ZoomBox_SelectionChanged"
+                  IsEnabled="False">
+          <ComboBoxItem Content="50%"/>
+          <ComboBoxItem Content="75%"/>
+          <ComboBoxItem Content="100%"/>
+          <ComboBoxItem Content="125%"/>
+          <ComboBoxItem Content="150%"/>
+          <ComboBoxItem Content="200%"/>
+        </ComboBox>
+
+        <Separator/>
+
+        <!-- Example toggle buttons for edit/view -->
+        <ToggleButton x:Name="EditToggle"
+                      Checked="EditToggle_Checked"
+                      Unchecked="EditToggle_Unchecked"
+                      Padding="10,4" Margin="12,0,0,0">Edit Mode</ToggleButton>
+      </ToolBar>
+    </ToolBarTray>
+
+    <!-- Status bar at the bottom -->
+    <StatusBar DockPanel.Dock="Bottom">
+      <StatusBarItem>
+        <TextBlock x:Name="StatusText" Text="Ready"/>
+      </StatusBarItem>
+    </StatusBar>
+
+    <!-- Center area: will host viewer (WindowsFormsHost) or editor (EditPageView) -->
+    <ContentControl x:Name="CenterHost" Panel.ZIndex="0"/>
+  </DockPanel>
+</Window>
