@@ -1,43 +1,53 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
+using WinTextBox = System.Windows.Controls.TextBox;
+using WinImage = System.Windows.Controls.Image;
+using WinGrid = System.Windows.Controls.Grid;
+using WinCanvas = System.Windows.Controls.Canvas;
+using WinScrollViewer = System.Windows.Controls.ScrollViewer;
+using WinUserControl = System.Windows.Controls.UserControl;
+using WinBrushes = System.Windows.Media.Brushes;
+using WinSolidColorBrush = System.Windows.Media.SolidColorBrush;
+using WinColor = System.Windows.Media.Color;
+using WinBitmapSource = System.Windows.Media.Imaging.BitmapSource;
+using WinStretch = System.Windows.Media.Stretch;
 
 namespace PdfStudio
 {
-    public sealed class EditPageView : UserControl
+    public sealed class EditPageView : WinUserControl
     {
-        private readonly Grid _root;
-        private readonly Image _pageImage;
-        private readonly Canvas _overlay;
-        private readonly List<TextBox> _boxes = new();
+        private readonly WinGrid _root;
+        private readonly WinImage _pageImage;
+        private readonly WinCanvas _overlay;
+        private readonly List<WinTextBox> _boxes = new();
 
-        private double _imgScale = 1.0;          // pixels per PDF point
-        private ParsedPage? _parsed;             // parsed page data
-        private BitmapSource? _background;       // cached PDF render
+        private double _imgScale = 1.0;               // pixels per PDF point
+        private ParsedPage? _parsed;                  // parsed page data
+        private WinBitmapSource? _background;         // cached PDF render
 
         public EditPageView()
         {
-            var scroll = new ScrollViewer
+            var scroll = new WinScrollViewer
             {
-                HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
-                VerticalScrollBarVisibility = ScrollBarVisibility.Auto
+                HorizontalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto,
+                VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto
             };
 
-            _root = new Grid { Background = new SolidColorBrush(Color.FromRgb(43, 43, 43)) };
-
-            _pageImage = new Image
+            _root = new WinGrid
             {
-                Stretch = Stretch.Uniform,
+                Background = new WinSolidColorBrush(WinColor.FromRgb(43, 43, 43))
+            };
+
+            _pageImage = new WinImage
+            {
+                Stretch = WinStretch.Uniform,
                 SnapsToDevicePixels = true
             };
 
-            _overlay = new Canvas
+            _overlay = new WinCanvas
             {
-                Background = Brushes.Transparent,
+                Background = WinBrushes.Transparent,
                 IsHitTestVisible = true
             };
 
@@ -53,7 +63,7 @@ namespace PdfStudio
         /// <summary>
         /// Load a parsed page and its background bitmap into the editor.
         /// </summary>
-        public void Load(ParsedPage parsed, BitmapSource pageBitmap)
+        public void Load(ParsedPage parsed, WinBitmapSource pageBitmap)
         {
             _parsed = parsed;
             _background = pageBitmap;
@@ -74,12 +84,12 @@ namespace PdfStudio
 
             foreach (var t in parsed.Texts)
             {
-                var tb = new TextBox
+                var tb = new WinTextBox
                 {
                     Text = t.Text,
                     FontSize = Math.Max(8.0, t.FontSizePt * _imgScale * 0.9),
-                    Background = new SolidColorBrush(Color.FromArgb(40, 255, 255, 0)),
-                    BorderBrush = Brushes.Goldenrod,
+                    Background = new WinSolidColorBrush(WinColor.FromArgb(40, 255, 255, 0)),
+                    BorderBrush = WinBrushes.Goldenrod,
                     BorderThickness = new Thickness(0.5),
                     Padding = new Thickness(2),
                     MinWidth = 12
@@ -119,7 +129,7 @@ namespace PdfStudio
             return new ParsedPage(_parsed.PageNumber, _parsed.WidthPt, _parsed.HeightPt, edited);
         }
 
-        private void PositionBox(TextBox tb, TextSpan span)
+        private void PositionBox(WinTextBox tb, TextSpan span)
         {
             if (_parsed == null) return;
 
@@ -128,8 +138,8 @@ namespace PdfStudio
             double yPxBottom = span.YPt * _imgScale;
             double yPxTop = _root.Height - (yPxBottom + span.HeightPt * _imgScale);
 
-            Canvas.SetLeft(tb, xPx);
-            Canvas.SetTop(tb, yPxTop);
+            WinCanvas.SetLeft(tb, xPx);
+            WinCanvas.SetTop(tb, yPxTop);
 
             tb.Width = Math.Max(8, span.WidthPt * _imgScale + 4);
         }
